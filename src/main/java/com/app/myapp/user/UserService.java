@@ -1,7 +1,7 @@
 package com.app.myapp.user;
 
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -11,12 +11,13 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public User createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
         user.setUsername(userRequestDTO.getUsername());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(userRequestDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
         return userRepository.save(user);
     }
@@ -27,6 +28,10 @@ public class UserService {
 
     public User getUserById(String id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public User getUserByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public User updateUser(String id, User user) {
