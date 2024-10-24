@@ -1,4 +1,4 @@
-package com.app.myapp;
+package com.app.myapp.items;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class ItemController {
         return ResponseEntity.status(201).body(savedItem);
     }
 
-    // Get all items
     @GetMapping
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
+
 }
