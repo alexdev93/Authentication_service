@@ -1,5 +1,7 @@
 package com.app.myapp.auth;
 
+import com.app.myapp.exception.InvalidCredntial;
+import com.app.myapp.exception.UsernameAlreadyExistsException;
 import com.app.myapp.user.*;
 import com.app.myapp.utils.JwtUtil;
 
@@ -19,7 +21,7 @@ public class AuthService {
     public User register(UserRequestDTO userDTO) {
         // Check if user already exists
         if (userService.getUserByUserName(userDTO.getUsername()) != null) {
-            throw new RuntimeException("Username already exists");
+            throw new UsernameAlreadyExistsException();
         }
 
         return userService.createUser(userDTO); // Save user to DB
@@ -37,7 +39,7 @@ public class AuthService {
             loginResponseDTO.setUsername(username);
             return loginResponseDTO;
         } else {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredntial();
         }
     }
 }
