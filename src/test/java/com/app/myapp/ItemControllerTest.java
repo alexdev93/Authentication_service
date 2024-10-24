@@ -1,5 +1,8 @@
 package com.app.myapp;
 
+import com.app.myapp.items.Item;
+import com.app.myapp.items.ItemController;
+import com.app.myapp.items.ItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
