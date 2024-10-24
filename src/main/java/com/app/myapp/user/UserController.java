@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -14,7 +16,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         User savedUser = userService.createUser(userRequestDTO);
         return ResponseEntity.status(201).body(savedUser);
     }
