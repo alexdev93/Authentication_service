@@ -1,6 +1,9 @@
 package com.app.myapp.user;
 
 import org.springframework.stereotype.Service;
+
+import com.app.myapp.exception.NotFoundException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +30,8 @@ public class UserService {
     }
 
     public User getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
     public User getUserByUserName(String username) {

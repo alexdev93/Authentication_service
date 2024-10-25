@@ -15,11 +15,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        User savedUser = userService.createUser(userRequestDTO);
-        return ResponseEntity.status(201).body(savedUser);
-    }
+    // @PostMapping
+    // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+    //     User savedUser = userService.createUser(userRequestDTO);
+    //     return ResponseEntity.status(201).body(savedUser);
+    // }
 
     @GetMapping
     public List<User> getAllUsers() {

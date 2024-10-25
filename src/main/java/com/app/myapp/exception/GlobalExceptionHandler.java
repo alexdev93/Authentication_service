@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-// import io.jsonwebtoken.ExpiredJwtException;
-// import io.jsonwebtoken.JwtException;
-// import io.jsonwebtoken.SignatureException;
-
 @ControllerAdvice
 @RestController
 public class GlobalExceptionHandler {
@@ -56,27 +52,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // // Handle expired JWT token
-    // @ExceptionHandler(ExpiredJwtException.class)
-    // public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException
-    // ex) {
-    // return new ResponseEntity<>("Token has expired", HttpStatus.UNAUTHORIZED);
-    // }
-
-    // // Handle invalid JWT signature
-    // @ExceptionHandler(SignatureException.class)
-    // public ResponseEntity<String> handleSignatureException(SignatureException ex)
-    // {
-    // return new ResponseEntity<>("Invalid token signature",
-    // HttpStatus.UNAUTHORIZED);
-    // }
-
-    // // Handle generic JWT exceptions
-    // @ExceptionHandler(JwtException.class)
-    // public ResponseEntity<String> handleJwtException(JwtException ex) {
-    // return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
-    // }
-
     // Handle UsernameAlreadyExistsException
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex,
@@ -99,6 +74,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN // 403 forbidden
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    // Handle Not Found Exception
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(
+            NotFoundException ex,
+            WebRequest request) {
+        ErrorResponse errorResponse = createErrorResponse(
+                ex.getMessage(),
+                request,
+                HttpStatus.NOT_FOUND // 404 forbidden
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     // Method to create a standardized error response

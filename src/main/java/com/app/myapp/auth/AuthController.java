@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth") // Base route for authentication
+@RequestMapping("/auth")
 @Validated
 public class AuthController {
 
@@ -25,8 +25,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        LoginResponseDTO response = authService.login(loginRequestDTO);
-        return ResponseEntity.ok(response); // Return JWT token
+    public ResponseEntity<AccessTokenResponse> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+        AccessTokenResponse response = authService.login(loginRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AccessTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
     }
 }
