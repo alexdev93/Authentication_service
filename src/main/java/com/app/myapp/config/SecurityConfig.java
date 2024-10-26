@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.app.myapp.auth.CustomUserDetailsService;
+import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.AuthEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
 
@@ -36,7 +37,9 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll()
-                                                .requestMatchers(SECURE_ENDPOINTS).authenticated()
+                                                .requestMatchers("/**").hasRole(RoleName.SUPER_ADMIN.toString())
+                                                .requestMatchers(SECURE_ENDPOINTS)
+                                                .hasAnyRole(RoleName.getAdminAndUserRoles())
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

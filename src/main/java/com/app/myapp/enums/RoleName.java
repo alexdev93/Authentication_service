@@ -5,8 +5,20 @@ public enum RoleName {
     ADMIN,
     USER;
 
+    public String getRole() {
+        return "ROLE_" + name();
+    }
+
+    public static String[] getAllRoles() {
+        return new String[] { SUPER_ADMIN.getRole(), ADMIN.getRole(), USER.getRole() };
+    }
+
+    public static String[] getAdminAndUserRoles() {
+        return new String[] { ADMIN.getRole(), USER.getRole(), SUPER_ADMIN.getRole() };
+    }
+
     @Override
     public String toString() {
-        return name(); // This will return the name of the enum as a string (e.g., "SUPER_ADMIN")
+        return getRole();
     }
 }

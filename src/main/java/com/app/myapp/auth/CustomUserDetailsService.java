@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.app.myapp.role.Role;
 import com.app.myapp.user.User;
 import com.app.myapp.user.UserRepository;
 
@@ -22,10 +23,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
+        String[] roles = user.getRoles() == null
+                ? new String[0]
+                : user.getRoles().stream()
+                        .map(Role::getName)
+                        .toArray(String[]::new);
+
         return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles() != null ? user.getRoles().toArray(new String[0]) : new String[0]) // Ensure roles
-                                                                                                         // are not null
+                .roles(roles)
                 .build();
 
     }
