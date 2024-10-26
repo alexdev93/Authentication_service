@@ -21,8 +21,4 @@ public class Role {
     @Indexed(unique = true)
     private RoleName name;
 
-    public String getName() {
-        return name.toString();
-    }
-
 }
