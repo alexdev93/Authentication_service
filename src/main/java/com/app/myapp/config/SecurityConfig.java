@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.app.myapp.auth.CustomUserDetailsService;
-import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.AuthEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
 
