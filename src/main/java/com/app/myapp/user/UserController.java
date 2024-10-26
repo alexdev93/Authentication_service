@@ -3,6 +3,8 @@ package com.app.myapp.user;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.app.myapp.role.Role;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -15,9 +17,10 @@ public class UserController {
     private final UserService userService;
 
     // @PostMapping
-    // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-    //     User savedUser = userService.createUser(userRequestDTO);
-    //     return ResponseEntity.status(201).body(savedUser);
+    // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO
+    // userRequestDTO) {
+    // User savedUser = userService.createUser(userRequestDTO);
+    // return ResponseEntity.status(201).body(savedUser);
     // }
 
     @GetMapping
@@ -40,5 +43,20 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         return userService.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{userId}/roles")
+    public ResponseEntity<List<Role>> getUserRoles(@PathVariable String userId) {
+        List<Role> roles = userService.getUserRoles(userId);
+        return ResponseEntity.ok(roles);
+    }
+
+    @PutMapping("/{userId}/assign-roles")
+    public ResponseEntity<User> assignRolesToUser(
+            @PathVariable String userId,
+            @RequestParam List<String> roleIds) {
+
+        User updatedUser = userService.assignRoles(userId, roleIds);
+        return ResponseEntity.ok(updatedUser);
     }
 }
