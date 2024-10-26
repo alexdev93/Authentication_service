@@ -4,30 +4,30 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
-
-import com.app.myapp.role.Role;
-
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import com.app.myapp.role.Role;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Set;
+import java.util.List;
 
 @Document(collection = "users")
-@Data // Generates getters, setters, equals, hashCode, toString
-@NoArgsConstructor // Generates a no-args constructor
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
-    private String id; // Using String for MongoDB ID
+    private String id;
 
-    @Indexed(unique = true) // Unique constraint on username
+    @Indexed(unique = true)
     private String username;
 
-    @Indexed(unique = true) // Unique constraint on email
+    @Indexed(unique = true)
     private String email;
 
     private String password;
 
-    @DBRef // Reference to Role documents
-    private Set<Role> roles; // Set of roles associated with the user
+    @DBRef(lazy = true)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    private List<Role> roles;
 }
