@@ -1,17 +1,18 @@
 package com.app.myapp.role;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/roles")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @PostMapping
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
@@ -20,8 +21,9 @@ public class RoleController {
     }
 
     @GetMapping
-    public List<Role> getAllRoles() {
-        return roleService.getAllRoles();
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = roleService.getAllRoles();
+        return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
@@ -38,6 +40,7 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable String id) {
-        return roleService.deleteRole(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        boolean deleted = roleService.deleteRole(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

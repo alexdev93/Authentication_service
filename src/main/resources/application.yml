@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: myapp
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/testdb
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+    redis:
+      time-to-live: 60000
+
+

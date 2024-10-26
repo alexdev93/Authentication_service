@@ -1,11 +1,13 @@
 package com.app.myapp.role;
 
 import lombok.*;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.app.myapp.enums.RoleName;
+
 import org.springframework.data.mongodb.core.index.Indexed;
-
-
 
 @Document(collection = "roles")
 @Data // Generates getters, setters, equals, hashCode, toString
@@ -14,9 +16,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Role {
 
     @Id
-    private String id; // Using String for MongoDB ID
+    private String id;
 
-    @Indexed(unique = true) // Make name unique
-    private String name; // The name of the role (e.g., "USER", "ADMIN")
+    @Indexed(unique = true)
+    private RoleName name;
 
 }

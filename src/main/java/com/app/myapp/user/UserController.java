@@ -1,23 +1,24 @@
 package com.app.myapp.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserRequestDTO userRequestDTO) {
-        User savedUser = userService.createUser(userRequestDTO);
-        return ResponseEntity.status(201).body(savedUser);
-    }
+    // @PostMapping
+    // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+    //     User savedUser = userService.createUser(userRequestDTO);
+    //     return ResponseEntity.status(201).body(savedUser);
+    // }
 
     @GetMapping
     public List<User> getAllUsers() {

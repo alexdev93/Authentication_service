@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponseDTO {
+public class AccessTokenResponse {
 
-    private String token; // JWT token
+    private String access_token; // JWT token
+    private String refresh_token; // JWT token
     private String username; // Optionally include the username or any other information you want to return
+    private String[] roles; 
 }
