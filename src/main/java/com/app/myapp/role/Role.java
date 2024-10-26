@@ -10,9 +10,9 @@ import com.app.myapp.enums.RoleName;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 @Document(collection = "roles")
-@Data // Generates getters, setters, equals, hashCode, toString
-@NoArgsConstructor // Generates a no-args constructor
-@AllArgsConstructor // Generates a constructor with all fields
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
 
     @Id
@@ -20,5 +20,9 @@ public class Role {
 
     @Indexed(unique = true)
     private RoleName name;
+
+    public String getName() {
+        return name.toString();
+    }
 
 }
