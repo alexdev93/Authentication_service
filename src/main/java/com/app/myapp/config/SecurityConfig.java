@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
         public static final String AUTHENTICATE_ENDPOINT = "/auth/**";
-        public static final String[] SECURE_ENDPOINTS = { "/users/**", "/items/**" };
+        public static final String[] SECURE_ENDPOINTS = { "/users/**", "/items/**", "/roles/**" };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
