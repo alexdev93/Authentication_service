@@ -1,6 +1,5 @@
 package com.app.myapp.auth;
 
-import com.app.myapp.exception.CustomException;
 import com.app.myapp.exception.InvalidCredntial;
 import com.app.myapp.exception.UsernameAlreadyExistsException;
 import com.app.myapp.user.*;
@@ -28,25 +27,21 @@ public class AuthService {
     }
 
     public AccessTokenResponse login(LoginRequestDTO loginRequestDTO) {
-        User userOptional = userService.getUserByUserName(loginRequestDTO.getUsername());
+        User user = userService.getUserByUserName(loginRequestDTO.getUsername());
 
-        if (userOptional != null
-                && passwordEncoder.matches(loginRequestDTO.getPassword(), userOptional.getPassword())) {
-            return generateTokenResponse(userOptional.getUsername());
+        if (user != null
+                && passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
+            return generateTokenResponse(user.getUsername());
         } else {
             throw new InvalidCredntial();
         }
     }
 
     public AccessTokenResponse refreshToken(String refreshToken) {
-        boolean isValid = jwtUtil.validateToken(refreshToken, true);
         String username = jwtUtil.extractUsername(refreshToken);
+        boolean isValid = jwtUtil.validateToken(refreshToken, username);
 
-        User user = userService.getUserByUserName(username);
-        if (!isValid && user == null) {
-            throw new CustomException("INVALID_TOKEN || USER_NOT_FIUND");
-        }
-        return generateTokenResponse(username);
+        return isValid ? generateTokenResponse(username) : null;
     }
 
     public AccessTokenResponse generateTokenResponse(String username) {

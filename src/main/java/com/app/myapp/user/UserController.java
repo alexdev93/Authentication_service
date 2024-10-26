@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     // @PostMapping
     // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {

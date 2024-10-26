@@ -11,11 +11,10 @@ import java.util.Map;
 public class JwtUtil {
 
     private final String SECRET_KEY = "your-secret-key";
-    private final String REFRESH_SECRET_KEY = "your-refresh-secret-key";
 
     // Define expiration time constants
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1 * 60 * 1000; // 1 minute
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 6 * 60 * 60 * 1000; // 6 hour
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hour
 
     // Generate a token
     public String generateToken(String username) {
@@ -42,16 +41,8 @@ public class JwtUtil {
     // Validate the token
     public Boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
+        System.out.println(extractedUsername);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
-    }
-
-    public boolean validateToken(String token, boolean isRefreshToken) {
-        try {
-            Jwts.parser().setSigningKey(isRefreshToken ? REFRESH_SECRET_KEY : SECRET_KEY).parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtException(e.getMessage());
-        }
     }
 
     // Extract username from the token

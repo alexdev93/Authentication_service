@@ -23,46 +23,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    public static final String[] AUTHENTICATE_ENDPOINT = { "/auth/register", "/auth/login" }; // Add your public
-                                                                                              // endpoints here
-    public static final String[] SECURE_ENDPOINTS = { "/users/**", "/items/**" };
+        public static final String AUTHENTICATE_ENDPOINT = "/auth/**";
+        public static final String[] SECURE_ENDPOINTS = { "/users/**", "/items/**" };
 
-    private final CustomUserDetailsService userDetailsService;
-    private final JwtRequestFilter jwtRequestFilter;
-    private final AuthEntryPoint authEntryPoint; // Inject the entry point
+        private final CustomUserDetailsService userDetailsService;
+        private final JwtRequestFilter jwtRequestFilter;
+        private final AuthEntryPoint authEntryPoint;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll() // Allow public access to these routes
-                        .requestMatchers(SECURE_ENDPOINTS).authenticated() // Secure all other routes
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session management
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter before
-                                                                                               // the authentication
-                                                                                               // filter
-                .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(authEntryPoint)); // Handle exceptions (unauthorized access)
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll()
+                                                .requestMatchers(SECURE_ENDPOINTS).authenticated()
+                                                .anyRequest().authenticated())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                                .exceptionHandling(handling -> handling
+                                                .authenticationEntryPoint(authEntryPoint));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Define password encoding
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http
-                .getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder()); // Build authentication manager using user details service and
-                                                     // password encoder
-        return authenticationManagerBuilder.build();
-    }
+        @Bean
+        public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+                AuthenticationManagerBuilder authenticationManagerBuilder = http
+                                .getSharedObject(AuthenticationManagerBuilder.class);
+                authenticationManagerBuilder
+                                .userDetailsService(userDetailsService)
+                                .passwordEncoder(passwordEncoder());
+                return authenticationManagerBuilder.build();
+        }
 }
