@@ -8,9 +8,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.lang.NonNull;
-
 import com.app.myapp.utils.JwtUtil;
-
+import com.app.myapp.utils.Helper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -26,8 +25,8 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-
     private final UserDetailsService userDetailsService;
+    private final Helper helper;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -65,25 +64,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
         } catch (ExpiredJwtException ex) {
-            // Handle expired token
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token has expired");
+            helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
+                    "Token has expired");
             return;
 
         } catch (JwtException ex) {
-            // Handle invalid token or other JWT exceptions
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token");
+            helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
+                    "Invalid token");
             return;
 
         } catch (Exception ex) {
-            // Handle any other unexpected exceptions
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("An error occurred while processing the token");
+            helper.handleServletResponse(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Server Error", "An error occurred while processing the token");
             return;
         }
 
-        // Proceed with the filter chain if no exceptions occurred
         chain.doFilter(request, response);
     }
 }

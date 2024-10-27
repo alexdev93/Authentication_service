@@ -1,6 +1,6 @@
 package com.app.myapp.auth;
 
-import com.app.myapp.exception.InvalidCredntial;
+import com.app.myapp.exception.InvalidCredential;
 import com.app.myapp.exception.UsernameAlreadyExistsException;
 import com.app.myapp.user.*;
 import com.app.myapp.utils.JwtUtil;
@@ -33,7 +33,7 @@ public class AuthService {
                 && passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
             return generateTokenResponse(user.getUsername());
         } else {
-            throw new InvalidCredntial();
+            throw new InvalidCredential();
         }
     }
 

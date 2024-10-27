@@ -1,10 +1,5 @@
 package com.app.myapp.user;
 
-// import org.springframework.cache.annotation.Cacheable;
-// import org.springframework.cache.annotation.Caching;
-// import org.springframework.cache.annotation.CacheEvict;
-// import org.springframework.cache.annotation.CachePut;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +27,14 @@ import static com.app.myapp.utils.AgregationPipeline.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final MongoTemplate mongoTemplate;
 
-    // @CacheEvict(value = "users:all", allEntries = true)
+    @PreAuthorize("hasAuthrority('ADMIN')")
     public User createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
         user.setUsername(userRequestDTO.getUsername());
@@ -66,8 +62,7 @@ public class UserService {
                 userRequestParams.getSortOrder(),
                 userRequestParams.getPage(),
                 userRequestParams.getSize(),
-                "username", "email", "roles"
-        );
+                "username", "email", "roles");
 
         List<User> users = mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
 
@@ -77,19 +72,15 @@ public class UserService {
         return new PageImpl<>(users, pageable, total);
     }
 
-    // @Cacheable(value = "users:id", key = "#id")
     public User getUserById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
-    // @Cacheable(value = "users:username", key = "#username", unless = "#result ==
-    // null")
     public User getUserByUserName(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // @CachePut(value = "users:id", key = "#id")
     public User updateUser(String id, User user) {
         return userRepository.findById(id)
                 .map(existingUser -> {
@@ -100,11 +91,6 @@ public class UserService {
                 }).orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
-    // @Caching(evict = {
-    // @CacheEvict(value = "users:all", allEntries = true),
-    // @CacheEvict(value = "users:roles", allEntries = true),
-    // @CacheEvict(value = "users:id", key = "#id"),
-    // })
     public boolean deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
@@ -113,7 +99,6 @@ public class UserService {
         return false;
     }
 
-    // @Cacheable(value = "users:roles", key = "#id")
     public List<Role> getUserRoles(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with ID: " + id));
@@ -121,10 +106,6 @@ public class UserService {
         return user.getRoles();
     }
 
-    // @Caching(evict = {
-    // @CacheEvict(value = "users:id", key = "#id"),
-    // @CacheEvict(value = "users:roles", key = "#id")
-    // })
     public User assignRoles(String id, List<String> roleIds) {
         User user = this.getUserById(id);
 

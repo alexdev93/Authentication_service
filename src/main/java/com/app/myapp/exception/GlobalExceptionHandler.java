@@ -2,19 +2,18 @@ package com.app.myapp.exception;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import lombok.RequiredArgsConstructor;
 
 @ControllerAdvice
-@RestController
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -30,12 +29,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                "Resource not found",
-                ex.getMessage(),
-                null, // Optional: you can set the request path here
-                HttpStatus.NOT_FOUND.value());
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex,
+            WebRequest request) {
+        ErrorResponse errorResponse = createErrorResponse("Resource not found", request, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -53,35 +49,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex,
             WebRequest request) {
-        ErrorResponse errorResponse = createErrorResponse(
-                "Username already exists",
-                request,
-                HttpStatus.CONFLICT);
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(InvalidCredntial.class)
-    public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(InvalidCredntial ex,
-            WebRequest request) {
-        ErrorResponse errorResponse = createErrorResponse(
-                "Invalid credintial",
-                request,
-                HttpStatus.FORBIDDEN);
+        ErrorResponse errorResponse = createErrorResponse("Username already exists", request, HttpStatus.CONFLICT);
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(
-            NotFoundException ex,
-            WebRequest request) {
-        ErrorResponse errorResponse = createErrorResponse(
-                ex.getMessage(),
-                request,
-                HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = createErrorResponse(ex.getMessage(), request, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    private ErrorResponse createErrorResponse(String message, WebRequest request, HttpStatus status) {
+    private ErrorResponse createErrorResponse(String message, WebRequest request,
+            HttpStatus status) {
         return new ErrorResponse(
                 message,
                 request.getDescription(false),
