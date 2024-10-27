@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.app.myapp.auth.CustomUserDetailsService;
+import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.AuthEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
 
@@ -24,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
         public static final String AUTHENTICATE_ENDPOINT = "/auth/**";
-        public static final String[] SECURE_ENDPOINTS = { "/users/**", "/items/**", "/roles/**" };
+        // public static final String[] SECURE_ENDPOINTS = { "/users/**", "/roles/**" };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
@@ -36,9 +37,9 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll()
-                                                .requestMatchers("/users/**").hasAnyAuthority("ADMIN", "USER")
-                                                .requestMatchers("/items/**").hasAuthority("USER")
-                                                .requestMatchers("/roles/**").hasAuthority("ADMIN")
+                                                .requestMatchers("/users/**")
+                                                .hasAnyAuthority(RoleName.ADMIN.name(), RoleName.USER.name())
+                                                .requestMatchers("/roles/**").hasAuthority(RoleName.ADMIN.name())
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
