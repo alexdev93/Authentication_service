@@ -14,7 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.app.myapp.auth.CustomUserDetailsService;
 import com.app.myapp.enums.RoleName;
-import com.app.myapp.exception.AuthEntryPoint;
+import com.app.myapp.exception.CustomAccessDeniedHandler;
+import com.app.myapp.exception.CustomAuthenticationEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class SecurityConfig {
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
-        private final AuthEntryPoint authEntryPoint;
+        private final CustomAuthenticationEntryPoint authEntryPoint;
+        private final CustomAccessDeniedHandler accessDeniedHandler;
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,7 +47,8 @@ public class SecurityConfig {
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                                 .exceptionHandling(handling -> handling
-                                                .authenticationEntryPoint(authEntryPoint));
+                                                .authenticationEntryPoint(authEntryPoint)
+                                                .accessDeniedHandler(accessDeniedHandler));
 
                 return http.build();
         }
