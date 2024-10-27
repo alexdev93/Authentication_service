@@ -27,7 +27,7 @@ import static com.app.myapp.utils.AgregationPipeline.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserService{
+public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -49,13 +49,8 @@ public class UserService{
 
     public Page<User> getUsers(UserRequestParams userRequestParams) {
 
-        Criteria criteria = new Criteria();
         String searchTerm = userRequestParams.getSearchTerm();
-        if (searchTerm != null && !searchTerm.isEmpty()) {
-            criteria.orOperator(
-                    Criteria.where("username").regex(searchTerm, "i"),
-                    Criteria.where("email").regex(searchTerm, "i"));
-        }
+        Criteria criteria = buildCriteria("username", searchTerm);
 
         Aggregation aggregation = buildAggregationPipeline(
                 criteria,

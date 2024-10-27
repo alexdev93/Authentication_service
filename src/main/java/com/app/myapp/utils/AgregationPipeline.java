@@ -47,4 +47,10 @@ public class AgregationPipeline {
 
         return aggregation;
     }
+
+    public static Criteria buildCriteria(String key, String searchTerm) {
+        Criteria criteria = new Criteria();
+        return criteria.orOperator(
+                Criteria.where(key).regex(searchTerm, "i"));
+    }
 }
