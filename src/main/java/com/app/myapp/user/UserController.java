@@ -1,10 +1,12 @@
 package com.app.myapp.user;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.myapp.role.Role;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -16,16 +18,9 @@ public class UserController {
 
     private final UserService userService;
 
-    // @PostMapping
-    // public ResponseEntity<User> createUser(@Valid @RequestBody UserRequestDTO
-    // userRequestDTO) {
-    // User savedUser = userService.createUser(userRequestDTO);
-    // return ResponseEntity.status(201).body(savedUser);
-    // }
-
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<User> getUsers(@Valid @ModelAttribute UserRequestParams userRequestParams) {
+        return userService.getUsers(userRequestParams);
     }
 
     @GetMapping("/{id}")
@@ -59,4 +54,5 @@ public class UserController {
         User updatedUser = userService.assignRoles(userId, roleIds);
         return ResponseEntity.ok(updatedUser);
     }
+
 }

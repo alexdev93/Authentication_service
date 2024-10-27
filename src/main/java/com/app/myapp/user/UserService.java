@@ -9,6 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +27,8 @@ import com.app.myapp.role.RoleService;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.app.myapp.utils.AgregationPipeline.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,6 +36,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final MongoTemplate mongoTemplate;
 
     // @CacheEvict(value = "users:all", allEntries = true)
     public User createUser(UserRequestDTO userRequestDTO) {
@@ -40,9 +51,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // @Cacheable(value = "users:all")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Page<User> getUsers(UserRequestParams userRequestParams) {
+
+        // Create search criteria
+        Criteria criteria = new Criteria();
+        String searchTerm = userRequestParams.getSearchTerm();
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            criteria.orOperator(
+                    Criteria.where("username").regex(searchTerm, "i"),
+                    Criteria.where("email").regex(searchTerm, "i"));
+        }
+
+        // Call reusable aggregation method
+        Aggregation aggregation = buildAggregationPipeline(
+                criteria,
+                userRequestParams.getSortOrder(),
+                userRequestParams.getPage(),
+                userRequestParams.getSize(),
+                "username", "email", "roles"
+        );
+
+        // Execute aggregation and retrieve the results
+        List<User> users = mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
+
+        // Calculate total count for pageable response
+        long total = mongoTemplate.count(Query.query(criteria), User.class);
+        Pageable pageable = PageRequest.of(userRequestParams.getPage(), userRequestParams.getSize());
+
+        // Return a Page object with users, pageable info, and total count
+        return new PageImpl<>(users, pageable, total);
     }
 
     // @Cacheable(value = "users:id", key = "#id")
