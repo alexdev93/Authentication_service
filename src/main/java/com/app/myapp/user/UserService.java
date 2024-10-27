@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.NotFoundException;
 import com.app.myapp.role.Role;
 import com.app.myapp.role.RoleService;
@@ -32,6 +33,9 @@ public class UserService {
         user.setUsername(userRequestDTO.getUsername());
         user.setEmail(userRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        Role role = roleService.getRoleByName(RoleName.USER.name());
+        user.setRoles(new ArrayList<Role>());
+        user.getRoles().add(role);
 
         return userRepository.save(user);
     }

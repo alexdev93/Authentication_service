@@ -36,8 +36,9 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll()
-                                                // .requestMatchers("/**").hasRole(RoleName.SUPER_ADMIN.name())
-                                                .requestMatchers(SECURE_ENDPOINTS).authenticated()
+                                                .requestMatchers("/users/**").hasAnyAuthority("ADMIN", "USER")
+                                                .requestMatchers("/items/**").hasAuthority("USER")
+                                                .requestMatchers("/roles/**").hasAuthority("ADMIN")
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
