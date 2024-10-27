@@ -10,22 +10,22 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Data // Generates getters, setters, equals, hashCode, toString
-@NoArgsConstructor // Generates a no-args constructor
+@Data
+@NoArgsConstructor 
 @AllArgsConstructor
 public class UserRequestDTO {
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    private String username; // User's username
+    private String username;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
-    private String email; // User's email
+    private String email;
 
     @NotBlank(message = "Password is required")
     @Size(min = 3, message = "Password must be at least 3 characters long")
-    private String password; // User's password
+    private String password;
 
-    private Set<Role> roles; // Set of role IDs (Assuming Role is another entity that can be validated)
+    private Set<Role> roles;
 }

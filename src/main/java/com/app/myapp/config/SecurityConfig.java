@@ -19,14 +19,15 @@ import com.app.myapp.exception.CustomAuthenticationEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true) // This enables method-based access control
 public class SecurityConfig {
 
         public static final String AUTHENTICATE_ENDPOINT = "/auth/**";
-        // public static final String[] SECURE_ENDPOINTS = { "/users/**", "/roles/**" };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;

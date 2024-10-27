@@ -1,12 +1,7 @@
 package com.app.myapp.role;
 
-// import org.springframework.cache.annotation.CacheEvict;
-// import org.springframework.cache.annotation.CachePut;
-// import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
 import com.app.myapp.exception.NotFoundException;
-
+import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -17,7 +12,6 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    // @CacheEvict(value = "roles:all", allEntries = true)
     public Role createRole(Role role) {
         Boolean isExist = checkRoleExistsByName(role.getName().toString());
         if (isExist) {
@@ -26,22 +20,18 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    // @Cacheable(value = "roles:all")
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    // @Cacheable(value = "roles:id", key = "#id")
     public Role getRoleById(String id) {
         return roleRepository.findById(id).orElse(null);
     }
 
-    // @Cacheable(value = "roles:username", key = "#name")
     public Role getRoleByName(String name) {
         return roleRepository.findByName(name).orElse(null);
     }
 
-    // @CachePut(value = "roles:id", key = "#id")
     public Role updateRole(String id, Role role) {
         return roleRepository.findById(id)
                 .map(existingRole -> {
@@ -50,7 +40,6 @@ public class RoleService {
                 }).orElse(null);
     }
 
-    // @CacheEvict(value = "roles:id", key = "#id")
     public boolean deleteRole(String id) {
         Boolean isExist = checkRoleExistsById(id);
         if (!isExist) {
