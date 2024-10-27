@@ -53,7 +53,6 @@ public class UserService {
 
     public Page<User> getUsers(UserRequestParams userRequestParams) {
 
-        // Create search criteria
         Criteria criteria = new Criteria();
         String searchTerm = userRequestParams.getSearchTerm();
         if (searchTerm != null && !searchTerm.isEmpty()) {
@@ -62,7 +61,6 @@ public class UserService {
                     Criteria.where("email").regex(searchTerm, "i"));
         }
 
-        // Call reusable aggregation method
         Aggregation aggregation = buildAggregationPipeline(
                 criteria,
                 userRequestParams.getSortOrder(),
@@ -71,14 +69,11 @@ public class UserService {
                 "username", "email", "roles"
         );
 
-        // Execute aggregation and retrieve the results
         List<User> users = mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
 
-        // Calculate total count for pageable response
         long total = mongoTemplate.count(Query.query(criteria), User.class);
         Pageable pageable = PageRequest.of(userRequestParams.getPage(), userRequestParams.getSize());
 
-        // Return a Page object with users, pageable info, and total count
         return new PageImpl<>(users, pageable, total);
     }
 
