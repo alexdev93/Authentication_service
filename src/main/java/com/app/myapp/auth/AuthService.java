@@ -51,6 +51,7 @@ public class AuthService {
         accessTokenResponse.setAccess_token(token);
         accessTokenResponse.setRefresh_token(refreshToken);
         accessTokenResponse.setUsername(username);
+        accessTokenResponse.setRoles(userService.getUserByUserName(username).getRoles());
         return accessTokenResponse;
     }
 }
