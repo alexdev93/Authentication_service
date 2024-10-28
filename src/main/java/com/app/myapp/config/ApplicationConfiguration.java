@@ -18,7 +18,7 @@ import reactor.netty.resources.ConnectionProvider;
 import java.time.Duration;
 
 @Configuration
-public class AppConfig {
+public class ApplicationConfiguration {
 
     @Bean
     public Logger logger() {
