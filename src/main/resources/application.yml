@@ -5,11 +5,41 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/testdb
+      username: your-username # Optional: Specify if authentication is enabled
+      password: your-password # Optional: Specify if authentication is enabled
+      authentication-database: admin # Optional: Specify if using a different authentication database
+      connection-pool:
+        min-size: 5 # Optional: Minimum connection pool size
+        max-size: 20 # Optional: Maximum connection pool size
+        max-wait-time: 1000ms # Optional: Maximum wait time for a connection from the pool
+
   cache:
     type: redis
-    host: localhost
-    port: 6379
     redis:
-      time-to-live: 60000
+      host: localhost
+      port: 6379
+      timeout: 1000ms # Optional: Connection timeout
+      password: your-password # Optional: If Redis requires authentication
+      ssl: false # Optional: Enable SSL if needed
+      time-to-live: 60000 # Time to live for cache entries in milliseconds
+      cache-null-values: false # Optional: Cache null values or not
 
+  mail:
+    host: smtp.your-email-provider.com # SMTP server host
+    port: 587 # or 465 for SSL
+    username: your-email@example.com # Your email address
+    password: your-email-password # Your email account password
+    properties:
+      mail:
+        smtp:
+          auth: true # Enable authentication
+          starttls:
+            enable: true # Enable STARTTLS
+            required: true # Require STARTTLS
+    default-encoding: UTF-8 # Default encoding for emails
 
+# Optional: Logging configuration
+logging:
+  level:
+    root: INFO
+    org.springframework.data.MongoDB: DEBUG # Enable debug logging for MongoDB operations
