@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,6 @@ public class UserService {
     private final RoleService roleService;
     private final MongoTemplate mongoTemplate;
 
-    @PreAuthorize("hasAuthrority('ADMIN')")
     public User createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
         user.setUsername(userRequestDTO.getUsername());

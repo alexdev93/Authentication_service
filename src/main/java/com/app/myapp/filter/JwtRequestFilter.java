@@ -65,17 +65,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         } catch (ExpiredJwtException ex) {
             helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
-                    "Token has expired");
+                    ex.getLocalizedMessage());
             return;
 
         } catch (JwtException ex) {
             helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
-                    "Invalid token");
+                    ex.getLocalizedMessage());
             return;
 
         } catch (Exception ex) {
             helper.handleServletResponse(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "Server Error", "An error occurred while processing the token");
+                    "Server Error", ex.getLocalizedMessage());
             return;
         }
 
