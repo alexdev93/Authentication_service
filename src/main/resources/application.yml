@@ -42,4 +42,4 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.data.MongoDB: DEBUG # Enable debug logging for MongoDB operations
+    "[org.springframework.data.mongodb.SpringDataMongoDB]": DEBUG
