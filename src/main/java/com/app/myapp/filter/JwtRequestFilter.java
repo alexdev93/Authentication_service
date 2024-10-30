@@ -64,17 +64,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
         } catch (ExpiredJwtException ex) {
-            helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
+            helper.writeErrorResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
                     ex.getLocalizedMessage());
             return;
 
         } catch (JwtException ex) {
-            helper.handleServletResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
+            helper.writeErrorResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized",
                     ex.getLocalizedMessage());
             return;
 
         } catch (Exception ex) {
-            helper.handleServletResponse(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+            helper.writeErrorResponse(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Server Error", ex.getLocalizedMessage());
             return;
         }

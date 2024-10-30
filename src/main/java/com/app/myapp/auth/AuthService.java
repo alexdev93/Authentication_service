@@ -27,11 +27,11 @@ public class AuthService {
     }
 
     public AccessTokenResponse login(LoginRequestDTO loginRequestDTO) {
-        User user = userService.getUserByUserName(loginRequestDTO.getUsername());
+        User user = userService.getUserByEmail(loginRequestDTO.getEmail());
 
         if (user != null
                 && passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
-            return generateTokenResponse(user.getUsername());
+            return generateTokenResponse(user);
         } else {
             throw new InvalidCredential();
         }
@@ -40,18 +40,20 @@ public class AuthService {
     public AccessTokenResponse refreshToken(String refreshToken) {
         String username = jwtUtil.extractUsername(refreshToken);
         boolean isValid = jwtUtil.validateToken(refreshToken, username);
+        User user = userService.getUserByUserName(username);
 
-        return isValid ? generateTokenResponse(username) : null;
+        return isValid ? generateTokenResponse(user) : null;
     }
 
-    public AccessTokenResponse generateTokenResponse(String username) {
+    public AccessTokenResponse generateTokenResponse(User user) {
+        String username = user.getUsername();
         String token = jwtUtil.generateToken(username);
         String refreshToken = jwtUtil.generateRefreshToken(username);
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
         accessTokenResponse.setAccess_token(token);
         accessTokenResponse.setRefresh_token(refreshToken);
-        accessTokenResponse.setUsername(username);
-        accessTokenResponse.setRoles(userService.getUserByUserName(username).getRoles());
+        accessTokenResponse.setId(user.getId());
+        // accessTokenResponse.setRoles(user.getRoles());
         return accessTokenResponse;
     }
 }
