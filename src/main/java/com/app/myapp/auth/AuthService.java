@@ -38,8 +38,8 @@ public class AuthService {
     }
 
     public AccessTokenResponse refreshToken(String refreshToken) {
-        String username = jwtUtil.extractUsername(refreshToken);
-        boolean isValid = jwtUtil.validateToken(refreshToken, username);
+        String username = jwtUtil.extractUsername(refreshToken, true);
+        boolean isValid = jwtUtil.validateToken(refreshToken, username, true);
         User user = userService.getUserByUserName(username);
 
         return isValid ? generateTokenResponse(user) : null;
