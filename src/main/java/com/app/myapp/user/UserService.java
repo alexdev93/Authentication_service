@@ -2,6 +2,7 @@ package com.app.myapp.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -70,14 +71,12 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
-    public User getUserByUserName(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(
-                "User with username " + username + " not found"));
+    public Optional<User> getUserByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(
-                "User with email " + email + " not found"));
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public User updateUser(String id, User user) {
