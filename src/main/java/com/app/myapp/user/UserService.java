@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -46,10 +48,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Page<User> getUsers(UserRequestParams userRequestParams) {
-
-        String searchTerm = userRequestParams.getSearchTerm();
-        Criteria criteria = buildCriteria("username", searchTerm);
+    @Cacheable(value = "users", key = "#userRequestParams.page + '-' + #userRequestParams.size + '-' + #userRequestParams.sortField + '-' + #userRequestParams.sortDirection + '-' + #userRequestParams.searchTerm", unless = "#result.isEmpty()")
+    public List<User> getUsersList(UserRequestParams userRequestParams) {
+        Criteria criteria = buildCriteria("username", userRequestParams.getSearchTerm());
 
         Aggregation aggregation = buildAggregationPipeline(
                 criteria,
@@ -58,9 +59,18 @@ public class UserService {
                 userRequestParams.getSize(),
                 "username", "email", "roles");
 
-        List<User> users = mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
+        return mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
+    }
 
-        long total = mongoTemplate.count(Query.query(criteria), User.class);
+    @Cacheable(value = "userCount", key = "#userRequestParams.page + '-' + #userRequestParams.size + '-' + #userRequestParams.searchTerm")
+    public long getUserCount(UserRequestParams userRequestParams) {
+        Criteria criteria = buildCriteria("username", userRequestParams.getSearchTerm());
+        return mongoTemplate.count(Query.query(criteria), User.class);
+    }
+
+    public Page<User> getUsers(UserRequestParams userRequestParams) {
+        List<User> users = getUsersList(userRequestParams);
+        long total = getUserCount(userRequestParams);
         Pageable pageable = PageRequest.of(userRequestParams.getPage(), userRequestParams.getSize());
 
         return new PageImpl<>(users, pageable, total);
@@ -79,6 +89,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public User updateUser(String id, User user) {
         return userRepository.findById(id)
                 .map(existingUser -> {
@@ -89,6 +100,7 @@ public class UserService {
                 }).orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public boolean deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
@@ -104,6 +116,7 @@ public class UserService {
         return user.getRoles();
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public User assignRoles(String id, List<String> roleIds) {
         User user = this.getUserById(id);
 
