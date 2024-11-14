@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor 
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
 
@@ -28,4 +28,10 @@ public class UserRequestDTO {
     private String password;
 
     private Set<Role> roles;
+
+    public UserRequestDTO(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
