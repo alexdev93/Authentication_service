@@ -21,7 +21,7 @@ spring:
       timeout: 1000ms # Optional: Connection timeout
       password: your-password # Optional: If Redis requires authentication
       ssl: false # Optional: Enable SSL if needed
-      time-to-live: 60000 # Time to live for cache entries in milliseconds
+      time-to-live: 60000ms # Time to live for cache entries in milliseconds
       cache-null-values: false # Optional: Cache null values or not
 
   mail:
@@ -38,8 +38,31 @@ spring:
             required: true # Require STARTTLS
     default-encoding: UTF-8 # Default encoding for emails
 
-# Optional: Logging configuration
+  actuator:
+    endpoints:
+      web:
+        exposure:
+          include: "*" # Expose all actuator endpoints
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Ensure actuator endpoints are accessible
+  prometheus:
+    metrics:
+      export:
+        enabled: true # Enable Prometheus metrics export
+  health:
+    defaults:
+      enabled: true # Enable default health indicators
+    mongodb:
+      enabled: true # Enable MongoDB health check
+    redis:
+      enabled: true # Enable Redis health check
+
 logging:
   level:
-    root: INFO
-    "[org.springframework.data.mongodb.SpringDataMongoDB]": DEBUG
+    root: INFO # Set the root logging level to INFO
+    org.springframework.boot.actuate: DEBUG # Set logging level for Actuator to DEBUG
+    org.springframework.data.mongodb.core: DEBUG # Set logging level for MongoDB operations to DEBUG

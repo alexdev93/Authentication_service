@@ -35,7 +35,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 public class SecurityConfig {
 
-        public static final String AUTHENTICATE_ENDPOINT = "/auth/**";
+        public static final String[] AUTHENTICATE_ENDPOINT = { "/auth/**", "/actuator/**" };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
