@@ -35,7 +35,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 public class SecurityConfig {
 
-        public static final String[] AUTHENTICATE_ENDPOINT = { "/auth/**", "/actuator/**" };
+        public static final String[] PUBLIC_ENDPOINTS = { "/auth/login", "/auth/refresh-token", "/auth/forgot-password",
+                        "/actuator/**" };
+        public static final String[] ADMIN_ENDPOINTS = { "/auth/register", "/users", "/users/{userId}/assign-roles",
+                        "/roles" };
+        public static final String[] USER_ENDPOINTS = { "/users/me/", "/users/me/update", };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
@@ -49,10 +53,10 @@ public class SecurityConfig {
                                                 .configurationSource(corsConfigurationSource()))
                                 .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers(AUTHENTICATE_ENDPOINT).permitAll()
-                                                .requestMatchers("/users/**")
+                                                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                                                .requestMatchers(ADMIN_ENDPOINTS).hasAuthority(RoleName.ADMIN.name())
+                                                .requestMatchers(USER_ENDPOINTS)
                                                 .hasAnyAuthority(RoleName.ADMIN.name(), RoleName.USER.name())
-                                                .requestMatchers("/roles/**").hasAuthority(RoleName.ADMIN.name())
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

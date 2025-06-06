@@ -26,6 +26,7 @@ import com.app.myapp.model.Role;
 import com.app.myapp.model.User;
 import com.app.myapp.repository.UserRepository;
 import com.app.myapp.util.AgregationPipeline;
+import com.app.myapp.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,6 +83,13 @@ public class UserService {
     public User getUserById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
+    }
+
+    public Optional<User> getMe(String authorizationHeader) {
+        String jwt = authorizationHeader.substring(7);
+        JwtUtil jwtUtil = new JwtUtil();
+        String username = jwtUtil.extractUsername(jwt, false);
+        return getUserByUserName(username);
     }
 
     public Optional<User> getUserByUserName(String username) {
