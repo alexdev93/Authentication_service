@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 public class UserRequestParams {
 
     private String searchTerm = "";
+    private String searchType = "";
 
     @Pattern(regexp = "username|email", message = "Sort field must be either 'username' or 'email'")
     private String sortField = "username";

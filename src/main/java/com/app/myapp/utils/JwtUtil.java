@@ -13,8 +13,8 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "your-secret-key";
     private final String RF_SECRET_KEY = "my-refresh-token";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1 * 60 * 1000; // 1 minute
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1 minute
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 10 * 60 * 1000; // 5 minutes
 
     public String generateToken(String username) {
         return createToken(new HashMap<>(), username, SECRET_KEY, ACCESS_TOKEN_EXPIRATION_TIME);

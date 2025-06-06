@@ -49,8 +49,21 @@ public class AgregationPipeline {
     }
 
     public static Criteria buildCriteria(String key, String searchTerm) {
-        Criteria criteria = new Criteria();
-        return criteria.orOperator(
-                Criteria.where(key).regex(searchTerm, "i"));
+        if (key == null || searchTerm == null || searchTerm.isEmpty()) {
+            return new Criteria(); // matches all
+        }
+
+        switch (key.toLowerCase()) {
+            case "username":
+                return Criteria.where("username").regex(searchTerm, "i");
+            case "email":
+                return Criteria.where("email").regex(searchTerm, "i");
+            case "roles":
+                // Assumes roles is an array of objects with a 'name' field
+                return Criteria.where("roles.name").is(searchTerm);
+            default:
+                // If the key is not recognized, return an empty criteria (matches nothing)
+                return Criteria.where("_id").is(null);
+        }
     }
 }

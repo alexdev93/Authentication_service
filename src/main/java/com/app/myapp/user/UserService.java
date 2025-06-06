@@ -22,10 +22,9 @@ import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.NotFoundException;
 import com.app.myapp.role.Role;
 import com.app.myapp.role.RoleService;
+import com.app.myapp.utils.AgregationPipeline;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.app.myapp.utils.AgregationPipeline.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,9 +49,10 @@ public class UserService {
 
     @Cacheable(value = "users", key = "#userRequestParams.page + '-' + #userRequestParams.size + '-' + #userRequestParams.sortField + '-' + #userRequestParams.sortDirection + '-' + #userRequestParams.searchTerm", unless = "#result.isEmpty()")
     public List<User> getUsersList(UserRequestParams userRequestParams) {
-        Criteria criteria = buildCriteria("username", userRequestParams.getSearchTerm());
+        Criteria criteria = AgregationPipeline.buildCriteria(userRequestParams.getSearchType(),
+                userRequestParams.getSearchTerm());
 
-        Aggregation aggregation = buildAggregationPipeline(
+        Aggregation aggregation = AgregationPipeline.buildAggregationPipeline(
                 criteria,
                 userRequestParams.getSortOrder(),
                 userRequestParams.getPage(),
@@ -62,9 +62,9 @@ public class UserService {
         return mongoTemplate.aggregate(aggregation, "users", User.class).getMappedResults();
     }
 
-    @Cacheable(value = "userCount", key = "#userRequestParams.page + '-' + #userRequestParams.size + '-' + #userRequestParams.searchTerm")
+    @Cacheable(value = "userCount", key = "#userRequestParams.page + '-' + #userRequestParams.size + '-' + #userRequestParams.searchTerm + '-' + #userRequestParams.searchType", unless = "#result == 0")
     public long getUserCount(UserRequestParams userRequestParams) {
-        Criteria criteria = buildCriteria("username", userRequestParams.getSearchTerm());
+        Criteria criteria = AgregationPipeline.buildCriteria("username", userRequestParams.getSearchTerm());
         return mongoTemplate.count(Query.query(criteria), User.class);
     }
 
