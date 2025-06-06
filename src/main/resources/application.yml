@@ -63,8 +63,8 @@ management:
 logging:
   level:
     root: INFO # Set the root logging level to INFO
-    org.springframework.boot.actuate: DEBUG # Set logging level for Actuator to DEBUG
-    org.springframework.data.mongodb.core: DEBUG # Set logging level for MongoDB operations to DEBUG
+    "[org.springframework.boot.actuate]": DEBUG # Set logging level for Actuator to DEBUG
+    "[org.springframework.data.mongodb.core]": DEBUG # Set logging level for MongoDB operations to DEBUG
 
 server:
   port: 8083
