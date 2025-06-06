@@ -1,4 +1,4 @@
-package com.app.myapp.utils;
+package com.app.myapp.util;
 
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;

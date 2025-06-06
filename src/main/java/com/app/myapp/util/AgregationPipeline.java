@@ -1,4 +1,4 @@
-package com.app.myapp.utils;
+package com.app.myapp.util;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;

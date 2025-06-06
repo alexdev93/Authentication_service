@@ -1,4 +1,4 @@
-package com.app.myapp.auth;
+package com.app.myapp.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

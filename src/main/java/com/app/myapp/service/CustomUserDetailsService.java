@@ -1,4 +1,4 @@
-package com.app.myapp.auth;
+package com.app.myapp.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.app.myapp.user.User;
-import com.app.myapp.user.UserRepository;
+import com.app.myapp.model.User;
+import com.app.myapp.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

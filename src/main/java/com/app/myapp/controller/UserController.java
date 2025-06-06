@@ -1,10 +1,13 @@
-package com.app.myapp.user;
+package com.app.myapp.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.app.myapp.role.Role;
+import com.app.myapp.dto.UserRequestParams;
+import com.app.myapp.model.Role;
+import com.app.myapp.model.User;
+import com.app.myapp.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

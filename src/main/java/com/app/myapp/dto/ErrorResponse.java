@@ -1,4 +1,4 @@
-package com.app.myapp.utils;
+package com.app.myapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

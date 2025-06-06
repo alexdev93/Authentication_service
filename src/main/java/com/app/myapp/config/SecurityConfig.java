@@ -19,11 +19,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.app.myapp.auth.CustomUserDetailsService;
 import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.CustomAccessDeniedHandler;
 import com.app.myapp.exception.CustomAuthenticationEntryPoint;
 import com.app.myapp.filter.JwtRequestFilter;
+import com.app.myapp.service.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

@@ -1,4 +1,4 @@
-package com.app.myapp.user;
+package com.app.myapp.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;

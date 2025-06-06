@@ -1,14 +1,14 @@
 package com.app.myapp;
 
-import com.app.myapp.auth.AccessTokenResponse;
-import com.app.myapp.auth.AuthService;
-import com.app.myapp.auth.LoginRequestDTO;
+import com.app.myapp.dto.AccessTokenResponse;
+import com.app.myapp.dto.LoginRequestDTO;
+import com.app.myapp.dto.UserRequestDTO;
 import com.app.myapp.exception.CustomException;
 import com.app.myapp.exception.InvalidCredential;
-import com.app.myapp.user.User;
-import com.app.myapp.user.UserRequestDTO;
-import com.app.myapp.user.UserService;
-import com.app.myapp.utils.JwtUtil;
+import com.app.myapp.model.User;
+import com.app.myapp.service.AuthService;
+import com.app.myapp.service.UserService;
+import com.app.myapp.util.JwtUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

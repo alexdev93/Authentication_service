@@ -1,4 +1,4 @@
-package com.app.myapp.role;
+package com.app.myapp.model;
 
 import lombok.*;
 

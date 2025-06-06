@@ -1,4 +1,4 @@
-package com.app.myapp.utils;
+package com.app.myapp.util;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.app.myapp.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;

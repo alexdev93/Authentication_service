@@ -1,7 +1,11 @@
-package com.app.myapp.role;
+package com.app.myapp.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.app.myapp.model.Role;
+import com.app.myapp.service.RoleService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

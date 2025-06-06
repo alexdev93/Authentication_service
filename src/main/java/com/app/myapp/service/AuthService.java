@@ -1,9 +1,12 @@
-package com.app.myapp.auth;
+package com.app.myapp.service;
 
+import com.app.myapp.dto.AccessTokenResponse;
+import com.app.myapp.dto.LoginRequestDTO;
+import com.app.myapp.dto.UserRequestDTO;
 import com.app.myapp.exception.CustomException;
 import com.app.myapp.exception.InvalidCredential;
-import com.app.myapp.user.*;
-import com.app.myapp.utils.JwtUtil;
+import com.app.myapp.model.User;
+import com.app.myapp.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 

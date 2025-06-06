@@ -1,6 +1,9 @@
-package com.app.myapp.role;
+package com.app.myapp.service;
 
 import com.app.myapp.exception.NotFoundException;
+import com.app.myapp.model.Role;
+import com.app.myapp.repository.RoleRepository;
+
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 

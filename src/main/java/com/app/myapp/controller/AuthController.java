@@ -1,11 +1,16 @@
-package com.app.myapp.auth;
+package com.app.myapp.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.app.myapp.user.User;
-import com.app.myapp.user.UserRequestDTO;
+import com.app.myapp.dto.AccessTokenResponse;
+import com.app.myapp.dto.ForgotPasswordDTO;
+import com.app.myapp.dto.LoginRequestDTO;
+import com.app.myapp.dto.RefreshTokenRequest;
+import com.app.myapp.dto.UserRequestDTO;
+import com.app.myapp.model.User;
+import com.app.myapp.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

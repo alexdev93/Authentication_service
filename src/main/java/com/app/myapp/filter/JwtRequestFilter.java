@@ -7,9 +7,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.app.myapp.util.Helper;
+import com.app.myapp.util.JwtUtil;
+
 import org.springframework.lang.NonNull;
-import com.app.myapp.utils.JwtUtil;
-import com.app.myapp.utils.Helper;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

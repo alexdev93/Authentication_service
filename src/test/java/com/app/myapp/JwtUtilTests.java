@@ -3,7 +3,7 @@ package com.app.myapp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.app.myapp.utils.JwtUtil;
+import com.app.myapp.util.JwtUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 

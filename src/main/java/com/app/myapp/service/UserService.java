@@ -1,4 +1,4 @@
-package com.app.myapp.user;
+package com.app.myapp.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +18,14 @@ import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.app.myapp.dto.UserRequestDTO;
+import com.app.myapp.dto.UserRequestParams;
 import com.app.myapp.enums.RoleName;
 import com.app.myapp.exception.NotFoundException;
-import com.app.myapp.role.Role;
-import com.app.myapp.role.RoleService;
-import com.app.myapp.utils.AgregationPipeline;
+import com.app.myapp.model.Role;
+import com.app.myapp.model.User;
+import com.app.myapp.repository.UserRepository;
+import com.app.myapp.util.AgregationPipeline;
 
 import lombok.RequiredArgsConstructor;
 
