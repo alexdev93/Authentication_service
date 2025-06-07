@@ -100,6 +100,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> getUserByResetToken(String resetToken) {
+        return userRepository.findByResetToken(resetToken);
+    }
+
     @CacheEvict(value = "users", allEntries = true)
     public User updateUser(String id, User user) {
         return userRepository.findById(id)
@@ -146,6 +150,15 @@ public class UserService {
         });
 
         return userRepository.save(user);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public void clearPasswordResetToken(String userId) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setResetToken(null);
+            user.setResetTokenExpiry(null);
+            userRepository.save(user);
+        });
     }
 
 }

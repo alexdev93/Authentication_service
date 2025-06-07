@@ -8,15 +8,13 @@ import com.app.myapp.dto.AccessTokenResponse;
 import com.app.myapp.dto.ForgotPasswordDTO;
 import com.app.myapp.dto.LoginRequestDTO;
 import com.app.myapp.dto.RefreshTokenRequest;
+import com.app.myapp.dto.ResetPasswordDTO;
 import com.app.myapp.dto.UserRequestDTO;
 import com.app.myapp.model.User;
 import com.app.myapp.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -45,9 +43,15 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public String forgotPassword(@RequestBody ForgotPasswordDTO entity) {
-       
-        
-        return "entity";
+        if (entity.getEmail() == null || entity.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        return authService.forgotPassword(entity.getEmail());
     }
     
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO dto) {
+        String response = authService.resetPassword(dto);
+        return ResponseEntity.ok(response);
+    }
 }

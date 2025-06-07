@@ -1,11 +1,14 @@
 package com.app.myapp.service;
 
 import com.app.myapp.dto.AccessTokenResponse;
+import com.app.myapp.dto.ForgotPasswordDTO;
 import com.app.myapp.dto.LoginRequestDTO;
+import com.app.myapp.dto.ResetPasswordDTO;
 import com.app.myapp.dto.UserRequestDTO;
 import com.app.myapp.exception.CustomException;
 import com.app.myapp.exception.InvalidCredential;
 import com.app.myapp.model.User;
+import com.app.myapp.repository.UserRepository;
 import com.app.myapp.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+    private final UserRepository userRepository;
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -69,5 +74,39 @@ public class AuthService {
         accessTokenResponse.setId(user.getId());
         // accessTokenResponse.setRoles(user.getRoles());
         return accessTokenResponse;
+    }
+
+    public String forgotPassword(String email) {
+        Optional<User> userOpt = userService.getUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new CustomException("No user found with email: " + email);
+        }
+        User user = userOpt.get();
+
+        String resetToken = java.util.UUID.randomUUID().toString();
+        long expiry = System.currentTimeMillis() + 15 * 60 * 1000; // 15 minutes
+
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(expiry);
+        userRepository.save(user);
+
+        String resetLink = "http://localhost:5173/reset-password?token=" + resetToken;
+
+        return "Password reset link: " + resetLink;
+    }
+
+    public String resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        Optional<User> userOpt = userService.getUserByResetToken(resetPasswordDTO.getResetToken());
+        if (userOpt.isEmpty()) {
+            throw new CustomException("Invalid or expired reset token.");
+        }
+        User user = userOpt.get();
+
+        user.setPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+        userService.clearPasswordResetToken(user.getId());
+
+        userRepository.save(user);
+
+        return "Password has been reset successfully.";
     }
 }

@@ -27,6 +27,9 @@ public class User {
 
     private String password;
 
+    private String resetToken;
+    private Long resetTokenExpiry;
+
     @DBRef(lazy = true)
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private List<Role> roles;
