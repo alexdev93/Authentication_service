@@ -36,6 +36,22 @@ public class Helper {
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 
+    public Object convertValue(Class<?> targetType, Object value) {
+        if (value == null)
+            return null;
+
+        if (targetType.equals(String.class))
+            return value.toString();
+        if (targetType.equals(Long.class))
+            return Long.parseLong(value.toString());
+        if (targetType.equals(Integer.class))
+            return Integer.parseInt(value.toString());
+        if (targetType.equals(Boolean.class))
+            return Boolean.parseBoolean(value.toString());
+
+        throw new IllegalArgumentException("Unsupported type: " + targetType.getName());
+    }
+
     @Async
     public void sendVerificationEmail(String toEmail, String verificationUrl) {
         SimpleMailMessage message = new SimpleMailMessage();

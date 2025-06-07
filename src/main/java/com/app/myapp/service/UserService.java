@@ -2,6 +2,7 @@ package com.app.myapp.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,11 @@ import com.app.myapp.model.Role;
 import com.app.myapp.model.User;
 import com.app.myapp.repository.UserRepository;
 import com.app.myapp.util.AgregationPipeline;
+import com.app.myapp.util.Helper;
+import com.app.myapp.util.UpdatableUserFields;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,6 +43,7 @@ public class UserService {
     private final RoleService roleService;
     private final MongoTemplate mongoTemplate;
     private final JwtService jwtService;
+    private final Helper helper;
 
     public User createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
@@ -92,19 +98,26 @@ public class UserService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
-    public User updateUser(String id, UserRequestDTO updatingUser) {
-        return userRepository.findById(id)
-                .map(existingUser -> {
-                    if (updatingUser.getUsername() != null) {
-                        existingUser.setUsername(updatingUser.getUsername());
-                    }
-                    if (updatingUser.getEmail() != null) {
-                        existingUser.setEmail(updatingUser.getEmail());
-                    }
+    public User updateUser(String id,
+            Map<String, Object> updates) {
+        User user = getUserById(id);
 
-                    return userRepository.save(existingUser);
-                })
-                .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
+        updates.forEach((fieldName, value) -> {
+            if (!UpdatableUserFields.ALLOWED_FIELDS.contains(fieldName)) {
+                throw new RuntimeException("Field '" + fieldName + "' is not updatable");
+            }
+
+            Field field = ReflectionUtils.findField(User.class, fieldName);
+            if (field != null) {
+                field.setAccessible(true);
+
+                // Type safety: Convert and validate the value
+                Object convertedValue = helper.convertValue(field.getType(), value);
+                ReflectionUtils.setField(field, user, convertedValue);
+            }
+        });
+
+        return userRepository.save(user);
     }
 
     public Optional<User> getUserByUserName(String username) {
@@ -158,11 +171,10 @@ public class UserService {
 
     @CacheEvict(value = "users", allEntries = true)
     public void clearPasswordResetToken(String userId) {
-        userRepository.findById(userId).ifPresent(user -> {
-            user.setResetToken(null);
-            user.setResetTokenExpiry(null);
-            userRepository.save(user);
-        });
+        User user = this.getUserById(userId);
+        user.setResetToken("");
+        user.setResetTokenExpiry(0L);
+        userRepository.save(user);
     }
 
 }

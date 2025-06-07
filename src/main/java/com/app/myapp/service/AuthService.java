@@ -89,7 +89,7 @@ public class AuthService {
         return "Password reset link: " + resetLink;
     }
 
-    public String resetPassword(ResetPasswordDTO resetPasswordDTO) {
+    public User resetPassword(ResetPasswordDTO resetPasswordDTO) {
         Optional<User> userOpt = userService.getUserByResetToken(resetPasswordDTO.getResetToken());
         if (userOpt.isEmpty()) {
             throw new CustomException("Invalid or expired reset token.");
@@ -99,8 +99,6 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
         userService.clearPasswordResetToken(user.getId());
 
-        userRepository.save(user);
-
-        return "Password has been reset successfully.";
+        return userRepository.save(user);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.app.myapp.dto.UserRequestDTO;
 import com.app.myapp.dto.UserRequestParams;
 import com.app.myapp.model.Role;
 import com.app.myapp.model.User;
@@ -15,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.NonNull;
@@ -38,25 +38,25 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getMe(@NonNull HttpServletRequest request) {
+    public ResponseEntity<User> thisUser(@NonNull HttpServletRequest request) {
         final String authorizationHeader = request.getHeader("Authorization");
         User user = userService.getMe(authorizationHeader);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserRequestDTO user) {
-        User updatedUser = userService.updateUser(id, user);
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody Map<String, Object> updates) {
+        User updatedUser = userService.updateUser(id, updates);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/me/update")
+    @PatchMapping("/me/update")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<User> updateMe(@NonNull HttpServletRequest request,
-            @RequestBody UserRequestDTO updatinRequestDTO) {
+            @RequestBody Map<String, Object> updates) {
         final String authorizationHeader = request.getHeader("Authorization");
         User thisUser = userService.getMe(authorizationHeader);
-        User updatedUser = userService.updateUser(thisUser.getId(), updatinRequestDTO);
+        User updatedUser = userService.updateUser(thisUser.getId(), updates);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
     }
 
@@ -72,7 +72,7 @@ public class UserController {
         return ResponseEntity.ok(roles);
     }
 
-    @PutMapping("/{userId}/assign-roles")
+    @PatchMapping("/{userId}/assign-roles")
     public ResponseEntity<User> assignRolesToUser(
             @PathVariable String userId,
             @RequestBody List<String> roleIds) {
