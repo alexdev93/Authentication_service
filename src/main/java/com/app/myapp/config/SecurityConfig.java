@@ -28,18 +28,14 @@ import com.app.myapp.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+import static com.app.myapp.config.ApiEndpoints.*;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity(prePostEnabled = true)
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 public class SecurityConfig {
-
-        public static final String[] PUBLIC_ENDPOINTS = { "/auth/login", "/auth/refresh-token", "/auth/forgot-password",
-                        "/actuator/**" };
-        public static final String[] ADMIN_ENDPOINTS = { "/auth/register", "/users", "/users/{userId}/assign-roles",
-                        "/roles" };
-        public static final String[] USER_ENDPOINTS = { "/users/me/", "/users/me/update", };
 
         private final CustomUserDetailsService userDetailsService;
         private final JwtRequestFilter jwtRequestFilter;
