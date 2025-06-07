@@ -1,7 +1,6 @@
 package com.app.myapp.service;
 
 import com.app.myapp.dto.AccessTokenResponse;
-import com.app.myapp.dto.ForgotPasswordDTO;
 import com.app.myapp.dto.LoginRequestDTO;
 import com.app.myapp.dto.ResetPasswordDTO;
 import com.app.myapp.dto.UserRequestDTO;
