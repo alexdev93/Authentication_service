@@ -3,9 +3,7 @@ spring:
     name: myapp
   data:
     mongodb:
-      uri: mongodb://localhost:27017/testdb
-      username: your-username # Optional: Specify if authentication is enabled
-      password: your-password # Optional: Specify if authentication is enabled
+      uri: mongodb+srv://alemayehudev:blazeog01369@cluster0.b9wba.mongodb.net/auth-service?retryWrites=true&w=majority&appName=Cluster0
       authentication-database: admin # Optional: Specify if using a different authentication database
       connection-pool:
         min-size: 5 # Optional: Minimum connection pool size
@@ -15,13 +13,13 @@ spring:
   cache:
     type: redis
     redis:
-      host: localhost
-      port: 6379
-      timeout: 1000ms # Optional: Connection timeout
-      password: your-password # Optional: If Redis requires authentication
-      ssl: false # Optional: Enable SSL if needed
-      time-to-live: 60000ms # Time to live for cache entries in milliseconds
-      cache-null-values: false # Optional: Cache null values or not
+      host: redis-18449.c245.us-east-1-3.ec2.redns.redis-cloud.com
+      port: 18449
+      timeout: 1000ms
+      password: up8GMRDvob3Sng4kohON96hQdeTzNmBT
+      ssl: false
+      time-to-live: 60000ms
+      cache-null-values: false
 
   mail:
     host: smtp.your-email-provider.com # SMTP server host
