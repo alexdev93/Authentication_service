@@ -8,7 +8,6 @@ import com.app.myapp.exception.CustomException;
 import com.app.myapp.exception.InvalidCredential;
 import com.app.myapp.model.User;
 import com.app.myapp.repository.UserRepository;
-import com.app.myapp.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,7 @@ public class AuthService {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtUtil;
 
     public User register(UserRequestDTO userDTO) {
         // Check if the user already exists by username
@@ -56,17 +55,17 @@ public class AuthService {
     }
 
     public AccessTokenResponse refreshToken(String refreshToken) {
-        String username = jwtUtil.extractUsername(refreshToken, true);
-        boolean isValid = jwtUtil.validateToken(refreshToken, username, true);
-        Optional<User> user = userService.getUserByUserName(username);
+        String id = jwtUtil.extractId(refreshToken, true);
+        boolean isValid = jwtUtil.validateToken(refreshToken, id, true);
+        User user = userService.getUserById(id);
 
-        return isValid ? generateTokenResponse(user.get()) : null;
+        return isValid ? generateTokenResponse(user) : null;
     }
 
     public AccessTokenResponse generateTokenResponse(User user) {
-        String username = user.getUsername();
-        String token = jwtUtil.generateToken(username);
-        String refreshToken = jwtUtil.generateRefreshToken(username);
+        String id = user.getId();
+        String token = jwtUtil.generateToken(id);
+        String refreshToken = jwtUtil.generateRefreshToken(id);
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse();
         accessTokenResponse.setAccess_token(token);
         accessTokenResponse.setRefresh_token(refreshToken);
@@ -76,11 +75,7 @@ public class AuthService {
     }
 
     public String forgotPassword(String email) {
-        Optional<User> userOpt = userService.getUserByEmail(email);
-        if (userOpt.isEmpty()) {
-            throw new CustomException("No user found with email: " + email);
-        }
-        User user = userOpt.get();
+        User user = userService.getUserByEmail(email).get();
 
         String resetToken = java.util.UUID.randomUUID().toString();
         long expiry = System.currentTimeMillis() + 15 * 60 * 1000; // 15 minutes

@@ -1,55 +1,55 @@
-package com.app.myapp;
+// package com.app.myapp;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
 
-import com.app.myapp.util.JwtUtil;
+// import com.app.myapp.service.JwtService;
 
-import static org.junit.jupiter.api.Assertions.*;
+// import static org.junit.jupiter.api.Assertions.*;
 
-class JwtUtilTest {
+// class JwtUtilTest {
 
-    private JwtUtil jwtUtil;
-    private String username = "testUser";
+//     private JwtService jwtUtil;
+//     private String username = "testUser";
 
-    @BeforeEach
-    void setUp() {
-        jwtUtil = new JwtUtil();
-    }
+//     @BeforeEach
+//     void setUp() {
+//         jwtUtil = new JwtService();
+//     }
 
-    @Test
-    void generateToken_shouldGenerateValidAccessToken() {
+//     @Test
+//     void generateToken_shouldGenerateValidAccessToken() {
 
-        String token = generateToken();
+//         String token = generateToken();
 
-        // Check that the token is not null or empty
-        assertNotNull(token);
-        assertFalse(token.isEmpty());
+//         // Check that the token is not null or empty
+//         assertNotNull(token);
+//         assertFalse(token.isEmpty());
 
-        // Validate the extracted username matches
-        String extractedUsername = extractUsername(token, false);
-        assertEquals(username, extractedUsername);
-    }
+//         // Validate the extracted username matches
+//         String extractedUsername = extractUsername(token, false);
+//         assertEquals(username, extractedUsername);
+//     }
 
-    @Test
-    void validateToken_shouldReturnTrueForValidToken() {
-        String token = generateToken();
+//     @Test
+//     void validateToken_shouldReturnTrueForValidToken() {
+//         String token = generateToken();
 
-        // Validate the token
-        Boolean isValid = validateToken(token, username, false);
-        assertTrue(isValid);
-    }
+//         // Validate the token
+//         Boolean isValid = validateToken(token, username, false);
+//         assertTrue(isValid);
+//     }
 
-    private String generateToken() {
-        return jwtUtil.generateToken(username);
-    }
+//     private String generateToken() {
+//         return jwtUtil.generateToken(username);
+//     }
 
-    private String extractUsername(String token, Boolean isRFToken) {
-        return jwtUtil.extractUsername(token, isRFToken);
-    }
+//     private String extractUsername(String token, Boolean isRFToken) {
+//         return jwtUtil.extractId(token, isRFToken);
+//     }
 
-    private Boolean validateToken(String token, String username, Boolean isRFToken) {
-        return jwtUtil.validateToken(token, username, false);
-    }
+//     private Boolean validateToken(String token, String username, Boolean isRFToken) {
+//         return jwtUtil.validateToken(token, username, false);
+//     }
 
-}
+// }

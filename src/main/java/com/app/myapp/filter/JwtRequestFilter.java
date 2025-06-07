@@ -8,8 +8,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.app.myapp.service.JwtService;
+import com.app.myapp.util.CustomUserDetails;
 import com.app.myapp.util.Helper;
-import com.app.myapp.util.JwtUtil;
 
 import org.springframework.lang.NonNull;
 
@@ -27,7 +28,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtUtil;
     private final UserDetailsService userDetailsService;
     private final Helper helper;
 
@@ -39,22 +40,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;
+        String id = null;
         String jwt = null;
 
         try {
             // Check if the header starts with "Bearer "
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7); // Extract JWT
-                username = jwtUtil.extractUsername(jwt, false); // Extract username
+                id = jwtUtil.extractId(jwt, false); // Extract username
             }
 
             // If username is valid and not authenticated, set the authentication context
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username); // Load user details
+            if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                CustomUserDetails userDetails = (CustomUserDetails) this.userDetailsService.loadUserByUsername(id);
 
                 // Validate the token
-                if (jwtUtil.validateToken(jwt, userDetails.getUsername(), false)) {
+                if (jwtUtil.validateToken(jwt, userDetails.getId(), false)) {
                     // Create authentication token
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());

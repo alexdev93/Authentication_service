@@ -26,7 +26,6 @@ import com.app.myapp.model.Role;
 import com.app.myapp.model.User;
 import com.app.myapp.repository.UserRepository;
 import com.app.myapp.util.AgregationPipeline;
-import com.app.myapp.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final MongoTemplate mongoTemplate;
+    private final JwtService jwtService;
 
     public User createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
@@ -85,11 +85,26 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
-    public Optional<User> getMe(String authorizationHeader) {
+    public User getMe(String authorizationHeader) {
         String jwt = authorizationHeader.substring(7);
-        JwtUtil jwtUtil = new JwtUtil();
-        String username = jwtUtil.extractUsername(jwt, false);
-        return getUserByUserName(username);
+        String id = jwtService.extractId(jwt, false);
+        return this.getUserById(id);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    public User updateUser(String id, UserRequestDTO updatingUser) {
+        return userRepository.findById(id)
+                .map(existingUser -> {
+                    if (updatingUser.getUsername() != null) {
+                        existingUser.setUsername(updatingUser.getUsername());
+                    }
+                    if (updatingUser.getEmail() != null) {
+                        existingUser.setEmail(updatingUser.getEmail());
+                    }
+
+                    return userRepository.save(existingUser);
+                })
+                .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
     public Optional<User> getUserByUserName(String username) {
@@ -102,17 +117,6 @@ public class UserService {
 
     public Optional<User> getUserByResetToken(String resetToken) {
         return userRepository.findByResetToken(resetToken);
-    }
-
-    @CacheEvict(value = "users", allEntries = true)
-    public User updateUser(String id, User user) {
-        return userRepository.findById(id)
-                .map(existingUser -> {
-                    existingUser.setUsername(user.getUsername());
-                    existingUser.setPassword(user.getPassword());
-                    existingUser.setEmail(user.getEmail());
-                    return userRepository.save(existingUser);
-                }).orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
     }
 
     @CacheEvict(value = "users", allEntries = true)

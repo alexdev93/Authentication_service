@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.myapp.model.User;
 import com.app.myapp.repository.UserRepository;
+import com.app.myapp.util.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,10 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        User user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
+            throw new UsernameNotFoundException(id + ": User Id not found");
         }
 
         // Convert roles to GrantedAuthority
@@ -35,14 +36,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .map(role -> new SimpleGrantedAuthority(role.getName().name())) // Assuming RoleName is an enum
                         .collect(Collectors.toList());
 
-        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
+        return CustomUserDetails.builder()
+                .id(user.getId())
+                .username(user.getUsername())
                 .password(user.getPassword())
-                // .roles(authorities)
-                .authorities(authorities) // Set authorities instead of roles
-                .accountExpired(false) // Set as needed
-                .accountLocked(false) // Set as needed
-                .credentialsExpired(false) // Set as needed
-                .disabled(false) // Set as needed
+                .authorities(authorities)
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .enabled(true)
                 .build();
     }
 }

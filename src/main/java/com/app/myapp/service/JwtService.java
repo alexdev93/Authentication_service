@@ -1,4 +1,4 @@
-package com.app.myapp.util;
+package com.app.myapp.service;
 
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
@@ -9,19 +9,19 @@ import java.util.Map;
 
 // Simplified and aligned key handling
 @Component
-public class JwtUtil {
+public class JwtService {
 
     private final String SECRET_KEY = "your-secret-key";
     private final String RF_SECRET_KEY = "my-refresh-token";
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME =  365 * 24 * 60 * 60 * 1000L;
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 365 * 24 * 60 * 60 * 1000L;
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 10 * 60 * 1000;
 
-    public String generateToken(String username) {
-        return createToken(new HashMap<>(), username, SECRET_KEY, ACCESS_TOKEN_EXPIRATION_TIME);
+    public String generateToken(String id) {
+        return createToken(new HashMap<>(), id, SECRET_KEY, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
-    public String generateRefreshToken(String username) {
-        return createToken(new HashMap<>(), username, RF_SECRET_KEY, REFRESH_TOKEN_EXPIRATION_TIME);
+    public String generateRefreshToken(String id) {
+        return createToken(new HashMap<>(), id, RF_SECRET_KEY, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     private String createToken(Map<String, Object> claims, String subject, String key, long expiration) {
@@ -34,12 +34,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, String username, Boolean isRFToken) {
-        String extractedUsername = extractUsername(token, isRFToken);
-        return (extractedUsername.equals(username) && !isTokenExpired(token, isRFToken));
+    public Boolean validateToken(String token, String id, Boolean isRFToken) {
+        String extractedId = extractId(token, isRFToken);
+        return (extractedId.equals(id) && !isTokenExpired(token, isRFToken));
     }
 
-    public String extractUsername(String token, Boolean isRFToken) {
+    public String extractId(String token, Boolean isRFToken) {
         return extractAllClaims(token, isRFToken).getSubject();
     }
 
