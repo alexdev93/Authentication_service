@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: myapp
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/testdb
+      username: your-username
+      password: your-password
+      authentication-database: admin
+      connection-pool:
+        min-size: 5
+        max-size: 20
+        max-wait-time: 1000ms
+
+  cache:
+    type: redis
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1000ms
+      password: your-password
+      ssl: false
+      time-to-live: 60000ms
+      cache-null-values: false
+
+  mail:
+    host: smtp.your-email-provider.com
+    port: 587
+    username: your-email@example.com
+    password: your-email-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    default-encoding: UTF-8
+
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  prometheus:
+    metrics.export.enabled: true
+  health:
+    defaults.enabled: true
+    mongodb.enabled: true
+    redis.enabled: true
+
+logging:
+  level:
+    root: INFO
+    "[org.springframework.boot.actuate]": DEBUG
+    "[org.springframework.data.mongodb.core]": DEBUG
