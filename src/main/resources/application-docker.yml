@@ -20,3 +20,35 @@ spring:
       ssl: false
       time-to-live: 60000ms
       cache-null-values: false
+
+  mail:
+    host: smtp.your-email-provider.com
+    port: 587
+    username: your-email@example.com
+    password: your-email-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    default-encoding: UTF-8
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  prometheus:
+    metrics.export.enabled: true
+  health:
+    defaults.enabled: true
+    mongodb.enabled: true
+    redis.enabled: true
+
+logging:
+  level:
+    root: INFO
+    "[org.springframework.boot.actuate]": DEBUG
+    "[org.springframework.data.mongodb.core]": DEBUG

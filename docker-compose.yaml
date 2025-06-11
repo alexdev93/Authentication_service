@@ -3,29 +3,37 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    #   image: alexdev93/auth-service:latest
     ports:
       - "9090:9090"
     depends_on:
       - mongo
       - redis
+    networks:
+      - backend
 
   mongo:
     image: mongo:6.0
     restart: always
     ports:
-      - "27017:27017"
+      - "27016:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - backend
 
   redis:
     image: redis:7.2
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - backend
 
 volumes:
   mongo-data:
   redis-data:
+
+networks:
+  backend:
