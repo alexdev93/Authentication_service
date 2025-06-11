@@ -1,3 +1,3 @@
 spring:
   profiles:
-    active: prod # or "prod"
+    active: dev # or "prod"
