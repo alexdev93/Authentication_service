@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: docker # or "prod"
+    active: docker
 
 server:
   port: 9090
