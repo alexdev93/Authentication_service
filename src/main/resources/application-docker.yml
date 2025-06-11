@@ -4,8 +4,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://mongo:27017/auth-db
-      username: your-username
-      password: your-password
       authentication-database: admin
       connection-pool:
         min-size: 5
