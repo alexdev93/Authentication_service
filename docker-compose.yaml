@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: alexdev/auth-service:latest
     ports:
       - "9090:9090"
     depends_on:
