@@ -3,35 +3,29 @@ services:
   auth-service:
     image: alexdev93/auth-service:latest
     ports:
-      - "5000:5000" # adjust based on your app's exposed port
+      - "9090:9090" # adjust based on your app's exposed port
     # environment:
       # - NODE_ENV=production
       # - JWT_SECRET=your-secret
       # - DB_URI=mongodb://mongo:27017/auth-db
       # - REDIS_URL=redis://redis:6379
-  # loki:
-  #   image: grafana/loki:2.8.0
-  #   ports:
-  #     - "3100:3100"
-  #   command: -config.file=/etc/loki/local-config.yaml
-  #   volumes:
-  #     - ./loki-config.yaml:/etc/loki/local-config.yaml
 
-  # promtail:
-  #   image: grafana/promtail:2.8.0
-  #   volumes:
-  #     - /var/log:/var/log
-  #     - ./promtail-config.yaml:/etc/promtail/config.yaml
-  #   command: -config.file=/etc/promtail/config.yaml
+  mongo:
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
 
-  # grafana:
-  #   image: grafana/grafana:9.5.2
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
-
-  
+  redis:
+    image: redis:7.2
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
 
 volumes:
-  grafana-storage:
+  mongo-data:
+  redis-data:

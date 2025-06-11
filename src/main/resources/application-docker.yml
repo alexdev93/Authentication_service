@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: myapp
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/auth-db
+      username: your-username
+      password: your-password
+      authentication-database: admin
+      connection-pool:
+        min-size: 5
+        max-size: 20
+        max-wait-time: 1000ms
+
+  cache:
+    type: redis
+    redis:
+      host: redis
+      port: 6379
+      timeout: 1000ms
+      password: your-password
+      ssl: false
+      time-to-live: 60000ms
+      cache-null-values: false
