@@ -9,7 +9,7 @@ public class ApiEndpoints {
         };
 
         public static final String[] ADMIN_ENDPOINTS = {
-                        "/auth/register",
+                        // "/auth/register",
                         "/users",
                         "/users/{userId}/assign-roles",
                         "/roles"
