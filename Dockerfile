@@ -20,7 +20,7 @@
     COPY --from=build /app/target/myapp-0.0.1-SNAPSHOT.jar app.jar
     
     # Expose application port
-    EXPOSE 8085
+    EXPOSE 9090
     
     # Run the app
     ENTRYPOINT ["java", "-jar", "app.jar"]

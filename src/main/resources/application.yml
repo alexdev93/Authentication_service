@@ -1,3 +1,6 @@
 spring:
   profiles:
     active: prod # or "prod"
+
+server:
+  port: 9090

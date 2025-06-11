@@ -35,9 +35,6 @@ spring:
             required: true
     default-encoding: UTF-8
 
-server:
-  port: 8083
-
 management:
   endpoints:
     web:
